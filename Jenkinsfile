@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Compiling contract') {
             steps {
-		sh 'mkdir bin'
+		sh 'mkdir -p bin'
                 sh 'node contracts/compile.js'
             }
         }
