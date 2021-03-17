@@ -5,7 +5,7 @@ contract SoftwareOutsouce
 {
     // TODO: set start and end date for contract
     // TODO: Security for timeouts
-
+    // TODO: Allow Jenkins team to specify a percentage of the payout 
     
 
     enum ContractState { NOT_FULFILLED, FULFILLED }
@@ -74,6 +74,7 @@ contract SoftwareOutsouce
 
         // Divide payout equally between contractors
         // TODO: Add weighted payouts
+        // TODO: Round this value to int
         uint splitPayout = value / contractors.length;
 
 
