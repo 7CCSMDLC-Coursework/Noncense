@@ -38,10 +38,12 @@ contract SoftwareOutsouce
         projectDetails = ProjectDetails(_projectName, _projectDetails);
     }
 
-    function setContractor(address payable[] memory _contractors) public onlyOwner
+    // TODO: Check if address already added
+    function addContractor(address payable contractor) public onlyOwner
     {
-        contractors = _contractors;
+        contractors.push(contractor);
     }
+
 
     modifier onlyOwner()
     {
@@ -52,6 +54,7 @@ contract SoftwareOutsouce
     /**
      * @dev Change owner
      * @param newOwner address of new owner
+
      */
     function changeOwner(address payable newOwner) public onlyOwner {
         emit OwnerSet(owner, newOwner);
@@ -61,12 +64,15 @@ contract SoftwareOutsouce
     /**
      * @dev Set a new state
      * @param cs A new state to set
+     * 
     */
     function updateState(ContractState cs) public onlyOwner
     {
         contractState = cs;
     }
 
+
+    // TODO: Return if payment was successfull, or the amount that was paid, etc
     function approve() payable public onlyOwner
     {
         require(contractState == ContractState.FULFILLED, "Contract has not been fulfilled");
