@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.7.4;
+pragma solidity >=0.8.2;
 
 contract SoftwareOutsouce
 {
@@ -32,7 +32,7 @@ contract SoftwareOutsouce
     constructor (string memory _projectName, string memory _projectDetails) payable
     {       
         value = msg.value; 
-        owner = msg.sender;
+        owner = payable( msg.sender);
 
         contractState = ContractState.NOT_FULFILLED;
         projectDetails = ProjectDetails(_projectName, _projectDetails);
