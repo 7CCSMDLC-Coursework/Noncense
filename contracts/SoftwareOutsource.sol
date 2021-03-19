@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.2;
 
-contract SoftwareOutsouce
+contract SoftwareOutsource
 {
     // TODO: set start and end date for contract
     // TODO: Security for timeouts
