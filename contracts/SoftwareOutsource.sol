@@ -5,9 +5,6 @@ contract SoftwareOutsouce
 {  
     enum ContractState { NOT_FULFILLED, FULFILLED, COMPLETE }
 
-    // final amount to payout
-    uint value;
-
     // epoch time that the contract will expire
     uint timeout;
 
@@ -29,7 +26,6 @@ contract SoftwareOutsouce
 
     constructor (string memory _projectName, string memory _projectDetails, uint256 _timeout) payable
     {       
-        value = msg.value; 
         employer = payable(msg.sender);
 
         timeout = _timeout;
@@ -66,25 +62,28 @@ contract SoftwareOutsouce
     }
 
 
-    // TODO: Return if payment was successfull, or the amount that was paid, etc
-    function approve(uint percentToPay) payable public returns (uint paidOut)
+    // BUG: Payment does not get made if paidOut is used as transfer() value
+    // TODO: Allow selection of contractors to pay, instead of everyone
+    function approve(uint percentToPay) payable public //returns (uint paidOut)
     {
         require(timeout >= block.timestamp, "Contract has expired");
         require(msg.sender == employer, "You are not authorized to call this function");
         require(contractState == ContractState.FULFILLED, "Contract has not been fulfilled");
         require(contractState != ContractState.COMPLETE, "Payment has already been made");
-        require(employer.balance >= value, "Insufficient Balance");
+       // require(address(this).balance >= value, "Insufficient Balance");
+        require(contractors.length > 0, "No contractors added");
 
         // extract the percentage to payout
         // percentToPay is set by Jenkins and will change based on the amount of tests that pass
-        value = (percentToPay / 100) * value;
+/*        uint value = (percentToPay / 100) * address(this).balance;
         
         // Divide payout equally between contractors
-        paidOut = uint(value / contractors.length);
-
+        paidOut = value / contractors.length;
+*/
+        
         for (uint i = 0; i < contractors.length; i++)
         {
-            contractors[i].transfer(paidOut);
+            contractors[i].transfer(address(this).balance);
         }
 
         // Mark the contract as complete so it can not be called twice
