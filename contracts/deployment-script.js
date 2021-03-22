@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 //Fetching compiled contract
-const MyContract = require('./bin/SoftwareOutsource.json');
+const MyContract = require('./../bin/SoftwareOutsource.json');
 
 //Setting up account and private key
 const address = '0xd9ED426f3F1ca5351480006bC9aB86CA97eFeFA6';
