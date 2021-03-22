@@ -21,7 +21,8 @@ const init = async () => {
     contract = await contract
                 .deploy({data: '0x' + MyContract.evm.bytecode.object, 
                         arguments: ['Sample project',
-                                    'This is a sample project created as part of CW']
+                                    'This is a sample project created as part of CW',
+                                    24]
                         })
                 .send({
                     from: address,
@@ -34,9 +35,11 @@ const init = async () => {
     //Executing smart contract functions
     await contract.methods.addContractor('0x06B2b27B94148D4Ab3Aaee467D5CaF160B81FBa3').send({from:address})
     await contract.methods.updateState(1).send({from:address});
-    const result = await contract.methods.approve().send({from:address});
+    const result = await contract.methods.approve(25).send({from:address});
     console.log(result);
     provider.engine.stop();
 }
 
-init();
+init().catch(error =>{
+    console.log(error);
+});
