@@ -1,21 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.7.4;
+pragma solidity >=0.7.0 <0.9.0;
+
 
 contract SoftwareOutsource
-{
-    // TODO: set start and end date for contract
-    // TODO: Security for timeouts
-    // TODO: Allow Jenkins team to specify a percentage of the payout 
-    
+{  
+    enum ContractState { NOT_FULFILLED, FULFILLED, COMPLETE }
 
-    enum ContractState { NOT_FULFILLED, FULFILLED }
+    // epoch time that the contract will expire
+    uint timeout;
 
-    // final amount to payout
-    uint value;
-
-    // owner is payable for the event we need to return the 
+    // employer is payable for the event we need to return the 
     // payout in the event the contract is not fulfilled
-    address payable owner;
+    address payable employer;
     address payable[] contractors;
 
 
@@ -29,63 +25,87 @@ contract SoftwareOutsource
         string _projectDescription;
     }
 
-    constructor (string memory _projectName, string memory _projectDetails) payable
+    constructor (string memory _projectName, string memory _projectDetails, uint256 _timeout) payable
     {       
-        value = msg.value; 
-        owner = msg.sender;
+        employer = payable(msg.sender);
+
+        timeout = _timeout;
 
         contractState = ContractState.NOT_FULFILLED;
         projectDetails = ProjectDetails(_projectName, _projectDetails);
     }
 
-    function setContractor(address payable[] memory _contractors) public onlyOwner
+    function addContractor(address payable contractor) public onlyEmployer
     {
-        contractors = _contractors;
+        // Loop through contractors and ensure contractor not already added
+        for (uint i = 0; i < contractors.length; i++)
+        {
+            require (contractors[i] != contractor, "Contractor has already been added");
+            require (contractor != employer);
+        }
+        contractors.push(contractor);
     }
 
-    modifier onlyOwner()
+
+    modifier onlyEmployer()
     {
-        require(msg.sender == owner);
+        require(msg.sender == employer);
         _;
-    }
-
-    /**
-     * @dev Change owner
-     * @param newOwner address of new owner
-     */
-    function changeOwner(address payable newOwner) public onlyOwner {
-        emit OwnerSet(owner, newOwner);
-        owner = newOwner;
     }
 
     /**
      * @dev Set a new state
      * @param cs A new state to set
+     * 
     */
-    function updateState(ContractState cs) public onlyOwner
+    function updateState(ContractState cs) public onlyEmployer
     {
         contractState = cs;
     }
 
-    function approve() payable public onlyOwner
+    function setStateToFulfilled() public onlyEmployer {
+        contractState = ContractState.FULFILLED;
+    }
+
+
+    // BUG: Payment does not get made if paidOut is used as transfer() value
+    // TODO: Allow selection of contractors to pay, instead of everyone
+    function approve(uint percentToPay) payable public //returns (uint paidOut)
     {
+        require(timeout >= block.timestamp, "Contract has expired");
+        require(msg.sender == employer, "You are not authorized to call this function");
         require(contractState == ContractState.FULFILLED, "Contract has not been fulfilled");
-        require(owner.balance >= value, "Insufficient Balance");
+        require(contractState != ContractState.COMPLETE, "Payment has already been made");
+       // require(address(this).balance >= value, "Insufficient Balance");
+        require(contractors.length > 0, "No contractors added");
 
+        // extract the percentage to payout
+        // percentToPay is set by Jenkins and will change based on the amount of tests that pass
+/*        uint value = (percentToPay / 100) * address(this).balance;
+        
         // Divide payout equally between contractors
-        // TODO: Add weighted payouts
-        // TODO: Round this value to int
-        uint splitPayout = value / contractors.length;
-
-
+        paidOut = value / contractors.length;
+*/
+        
         for (uint i = 0; i < contractors.length; i++)
         {
-            contractors[i].transfer(splitPayout);
+            contractors[i].transfer(address(this).balance);
         }
+
+        // Mark the contract as complete so it can not be called twice
+        contractState = ContractState.COMPLETE;
     }
 
-    function getState() public view returns (string memory pn) {
-        pn = projectDetails._projectName;
-        // return projectDetails._projectName;
+    function getState() public view returns (uint) {
+        return uint(contractState);
     }
+
+    function getEmployer() public view returns (address payable) {
+        return employer;
+    }
+
+    function getContractors() public view returns (address payable[] memory) {
+        return contractors;
+    }
+    
 }
