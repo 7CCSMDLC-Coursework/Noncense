@@ -1,7 +1,9 @@
+console.log("Starting");
 const Web3 = require('web3');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 //Fetching compiled contract
+console.log("Debug");
 const MyContract = require('./../bin/SoftwareOutsource.json');
 console.log(MyContract.abi);
 
