@@ -8,7 +8,7 @@ pipeline {
             steps {
                 sh 'npm install solc'
                 sh 'npm install web3'
-                sh 'npm install @truffle/hdwallet-provider'
+                sh 'npm i @truffle/hdwallet-provider@1.0.18'
             }
         }
         stage('Compiling contract') {
