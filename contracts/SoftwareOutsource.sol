@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
@@ -41,6 +42,7 @@ contract SoftwareOutsource
         for (uint i = 0; i < contractors.length; i++)
         {
             require (contractors[i] != contractor, "Contractor has already been added");
+            require (contractor != employer);
         }
         contractors.push(contractor);
     }
@@ -60,6 +62,10 @@ contract SoftwareOutsource
     function updateState(ContractState cs) public onlyEmployer
     {
         contractState = cs;
+    }
+
+    function setStateToFulfilled() public onlyEmployer {
+        contractState = ContractState.FULFILLED;
     }
 
 
@@ -90,5 +96,17 @@ contract SoftwareOutsource
         // Mark the contract as complete so it can not be called twice
         contractState = ContractState.COMPLETE;
     }
-}
 
+    function getState() public view returns (uint) {
+        return uint(contractState);
+    }
+
+    function getEmployer() public view returns (address payable) {
+        return employer;
+    }
+
+    function getContractors() public view returns (address payable[] memory) {
+        return contractors;
+    }
+    
+}
