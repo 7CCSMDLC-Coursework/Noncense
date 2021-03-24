@@ -33,7 +33,7 @@ const init = async () => {
                 .send({
                     from: address,
                     gas: '2000000',
-                    gasPrice: '124000000000'});
+                    gasPrice: web3.utils.toWei('125','gwei')});
 
     console.log(`Contract deployed at address: ${contract.options.address}`);
     console.log("Starting transfer now ...");
