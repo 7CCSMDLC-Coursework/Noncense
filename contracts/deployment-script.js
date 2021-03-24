@@ -13,6 +13,8 @@ const provider = new HDWalletProvider(privateKey, "https://ropsten.infura.io/v3/
 
 //Setting provider inside web3
 const web3 = new Web3(provider);
+const now = Date.now();
+let epochTime = now + 10000;
 
 const init = async () => {
     
@@ -22,7 +24,7 @@ const init = async () => {
                 .deploy({data: '0x' + MyContract.evm.bytecode.object, 
                         arguments: ['Sample project',
                                     'This is a sample project created as part of CW',
-                                    24]
+                                    epochTime]
                         })
                 .send({
                     from: address,
