@@ -1,11 +1,8 @@
-console.log("Starting");
 const Web3 = require('web3');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 //Fetching compiled contract
-console.log("Debug");
 const MyContract = require('./../bin/SoftwareOutsource.json');
-console.log(MyContract.abi);
 
 //Setting up account and private key
 const address = '0xd9ED426f3F1ca5351480006bC9aB86CA97eFeFA6';
@@ -47,4 +44,5 @@ const init = async () => {
 
 init().catch(error =>{
     console.log(error);
+    process.exit(1);
 });
