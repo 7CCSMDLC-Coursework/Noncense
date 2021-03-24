@@ -19,11 +19,9 @@ pipeline {
         }
         stage('Deploying contract') {
             steps {
-                script {
-                    final String response = sh (script: 'node contracts/deployment-script.js', returnStdout: true).trim()
+                    sh 'node contracts/deployment-script.js'
                     echo response
                     echo "Contract successfully deployed!"
-                }
             }
         }
     }
