@@ -20,6 +20,10 @@ const init = async () => {
     
     //Deploying contract
     let contract = new web3.eth.Contract(MyContract.abi);
+    const networkId = await web3.eth.net.getId();
+    const chainId = await web3.eth.getChainId();
+    console.log(chainId);
+    console.log(networkId);
     contract = await contract
                 .deploy({data: '0x' + MyContract.evm.bytecode.object, 
                         arguments: ['Sample project',
