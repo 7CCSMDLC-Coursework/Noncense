@@ -20,10 +20,6 @@ const init = async () => {
     
     //Deploying contract
     let contract = new web3.eth.Contract(MyContract.abi);
-    const networkId = await web3.eth.net.getId();
-    const chainId = await web3.eth.getChainId();
-    console.log(chainId);
-    console.log(networkId);
     contract = await contract
                 .deploy({data: '0x' + MyContract.evm.bytecode.object, 
                         arguments: ['Sample project',
@@ -33,8 +29,7 @@ const init = async () => {
                 .send({
                     from: address,
                     gas: '2000000',
-                    chainId:3,
-                    gasPrice: '10'});
+                    gasPrice: '124000000000'});
 
     console.log(`Contract deployed at address: ${contract.options.address}`);
     console.log("Starting transfer now ...");
