@@ -19,11 +19,10 @@ let epochTime = now + 10000;
 
 const init = async () => {
 
-    console.log("Creating contract object");
     let contract = new web3.eth.Contract(MyContract.abi);
     
     //Deploying contract
-    console.log("Deploying contract");
+    console.log("Starting deployment");
     contract = await contract
                 .deploy({data: '0x' + MyContract.evm.bytecode.object, 
                         arguments: ['Sample project',
@@ -36,11 +35,12 @@ const init = async () => {
                     gasPrice: web3.utils.toWei('125','gwei')});
 
     console.log(`Contract deployed at address: ${contract.options.address}`);
-    console.log("Starting transfer now ...");
-
+    
     //Executing smart contract functions
+    console.log("Adding contractor address ...")
     await contract.methods.addContractor('0x06B2b27B94148D4Ab3Aaee467D5CaF160B81FBa3').send({from:address})
     await contract.methods.setStateToFulfilled().send({from:address});
+    console.log("Starting transfer now ...");
     const result = await contract.methods.approve(25).send({from:address,gasPrice: web3.utils.toWei('125','gwei')});
     console.log(result);
     provider.engine.stop();
