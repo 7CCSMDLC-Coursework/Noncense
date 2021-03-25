@@ -41,7 +41,7 @@ const init = async () => {
     //Executing smart contract functions
     await contract.methods.addContractor('0x06B2b27B94148D4Ab3Aaee467D5CaF160B81FBa3').send({from:address})
     await contract.methods.setStateToFulfilled().send({from:address});
-    const result = await contract.methods.approve(25).send({from:address});
+    const result = await contract.methods.approve(25).send({from:address,gasPrice: web3.utils.toWei('125','gwei')});
     console.log(result);
     provider.engine.stop();
 }
