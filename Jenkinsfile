@@ -20,8 +20,7 @@ pipeline {
         stage('Deploying contract') {
             steps {
                     sh 'node contracts/deployment-script.js'
-                    echo response
-                    echo "Contract successfully deployed!"
+                    echo "Payment complete!"
             }
         }
     }
