@@ -5,11 +5,11 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const MyContract = require('./../bin/SoftwareOutsource.json');
 
 //Setting up account and private key
-const address = '0xd9ED426f3F1ca5351480006bC9aB86CA97eFeFA6';
-const privateKey = '0xd7d113798a8f06669525813431ecc5972faec78b40f6b58df43275ccdcb5c1b9';
+const address = 'deployer_address';
+const privateKey = 'deployer_pk';
 
 //Signing transaction with wallet
-const provider = new HDWalletProvider(privateKey, "https://ropsten.infura.io/v3/b08ecb4bb9e945beb2373643b4db9e9d");
+const provider = new HDWalletProvider(privateKey, "https://ropsten.infura.io/v3/provuri");
 
 //Setting provider inside web3
 const web3 = new Web3(provider);
@@ -35,7 +35,7 @@ const init = async () => {
     console.log("Starting transfer now ...");
 
     //Executing smart contract functions
-    await contract.methods.addContractor('0x06B2b27B94148D4Ab3Aaee467D5CaF160B81FBa3').send({from:address})
+    await contract.methods.addContractor('contractor_address').send({from:address})
     await contract.methods.updateState(1).send({from:address});
     const result = await contract.methods.approve(25).send({from:address});
     console.log(result);
